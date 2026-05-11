@@ -4,3 +4,11 @@
   tasks:
     - name: Ping the host
       ansible.builtin.ping:
+
+    - name: Get Disk Usage
+      ansible.builtin.command: df -h /
+      register: disk_info
+    
+    - name: Show Disk Usage
+      ansible.builtin.debug:
+        var: disk_info.stdout_lines
