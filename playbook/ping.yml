@@ -1,6 +1,8 @@
 ---
 - name: Test Connection
   hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: Ping the host
       ansible.builtin.ping:
@@ -9,6 +11,49 @@
       ansible.builtin.command: df -h /
       register: disk_info
     
-    - name: Show Disk Usage
+    - name: Show IP Address
       ansible.builtin.debug:
-        var: disk_info.stdout_lines
+        msg: "The IP address is {{ ansible_default_ipv4.address }}"
+
+    # ৪. ইউজার লিস্ট
+    - name: Get User List
+      ansible.builtin.command: cut -d: -f1 /etc/passwd
+      register: user_list
+
+    # ৫. হোস্ট ফাইল রেকর্ড
+    - name: Get Hosts File Records
+      ansible.builtin.command: cat /etc/hosts
+      register: hosts_records
+
+    # ৬. র‍্যাম বা মেমোরি ইনফো (RAM Usage)
+    - name: Check Free Memory
+      ansible.builtin.command: free -m
+      register: ram_info
+
+    - name: Show RAM Info
+      ansible.builtin.debug:
+        var: ram_info.stdout_lines
+
+    # ৭. সিস্টেম আপটাইম (সার্ভারটি কতক্ষণ ধরে চলছে)
+    - name: Check System Uptime
+      ansible.builtin.command: uptime
+      register: uptime_info
+
+    - name: Show Uptime
+      ansible.builtin.debug:
+        var: uptime_info.stdout
+
+    # ৮. ওএস ভার্সন বা ডিস্ট্রিবিউশন চেক
+    - name: Show OS Version
+      ansible.builtin.debug:
+        msg: "Running {{ ansible_distribution }} version {{ ansible_distribution_version }}"
+
+    # ৯. একটি নির্দিষ্ট সার্ভিসের স্ট্যাটাস (যেমন: SSH)
+    - name: Check SSH Service Status
+      ansible.builtin.systemd:
+        name: ssh
+      register: ssh_status
+
+    - name: Display SSH State
+      ansible.builtin.debug:
+        msg: "SSH service is {{ ssh_status.status.ActiveState }}"
