@@ -16,9 +16,9 @@
         msg: "The IP address is {{ ansible_default_ipv4.address }}"
 
     # ৪. ইউজার লিস্ট
-    - name: Get User List
-      ansible.builtin.command: cut -d: -f1 /etc/passwd
-      register: user_list
+    #- name: Get User List
+    #  ansible.builtin.command: cut -d: -f1 /etc/passwd
+    #  register: user_list
 
     # ৫. হোস্ট ফাইল রেকর্ড
     - name: Get Hosts File Records
